@@ -1,9 +1,21 @@
 import { parse } from "valibot";
 import { SearchType } from "../types/SearchType";
 import axios from "axios";
-import { WeatherSchema } from "../types/Weather";
+import { Weather, WeatherSchema } from "../types/Weather";
+import { useMemo, useState } from "react";
 
 export default function useWeather() {
+  const [weather, setWeather] = useState<Weather>({
+    name: "",
+    main: {
+      temp: 0,
+      temp_max: 0,
+      temp_min: 0,
+    },
+  });
+
+  console.log(weather);
+
   const fetchWeather = async (search: SearchType): Promise<void> => {
     const appId = import.meta.env.VITE_API_KEY;
 
@@ -19,16 +31,17 @@ export default function useWeather() {
 
       const result = parse(WeatherSchema, weather);
 
-      if (result) {
-        console.log(result.main.temp);
-      }
-      console.log(result);
+      setWeather(result);
     } catch (error) {
       console.error(error);
     }
   };
 
+  const hasWeatherData = useMemo(() => weather.name, [weather]);
+
   return {
+    weather,
     fetchWeather,
+    hasWeatherData,
   };
 }
