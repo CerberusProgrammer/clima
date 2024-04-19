@@ -1,3 +1,13 @@
+import Form from "./components/Form";
+import useWeather from "./hooks/useWeather";
+
 export default function App() {
-  return <div>App</div>;
+  const { fetchWeather } = useWeather();
+
+  return (
+    <>
+      <div>App</div>
+      <Form fetchWeather={fetchWeather}></Form>
+    </>
+  );
 }
